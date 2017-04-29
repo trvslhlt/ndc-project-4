@@ -1,9 +1,10 @@
 package com.travisandjersy.safephoto;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import static android.R.attr.value;
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    private Fragment currentFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -21,16 +23,18 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    Intent myIntent = new Intent(MainActivity.this, PhotosActivity.class);
-//                    myIntent.putExtra("key", value); //Optional parameters
-                    MainActivity.this.startActivity(myIntent);
+                    if (currentFragment instanceof PhotosFragment) {
+                        return false;
+                    }
+                    transitionToFragment(new PhotosFragment());
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    if (currentFragment instanceof UploadFragment) {
+                        return false;
+                    }
+                    transitionToFragment(new UploadFragment());
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
                     return true;
             }
             return false;
@@ -43,9 +47,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        transitionToFragment(new PhotosFragment());
     }
 
+    private void transitionToFragment(Fragment newFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                if (currentFragment != null) {
+                    transaction.remove(currentFragment);
+                }
+                transaction.add(R.id.content, newFragment)
+                .commit();
+        currentFragment = newFragment;
+    }
 }
