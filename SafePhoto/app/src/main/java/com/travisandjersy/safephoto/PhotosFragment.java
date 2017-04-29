@@ -11,6 +11,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * Created by trvslhlt on 4/29/17.
  */
@@ -18,6 +20,8 @@ import android.widget.Toast;
 public class PhotosFragment extends ListFragment implements OnItemClickListener{
 
     private static final String TAG = "PhotosFragment";
+    ArrayList<String> photoNames = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
 
     @Nullable
     @Override
@@ -28,16 +32,22 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(
-                getActivity(),
-                R.array.SamplePhotoNames,
-                android.R.layout.simple_expandable_list_item_1);
+
+        photoNames.add("This");
+        photoNames.add("and");
+        photoNames.add("that");
+
+        adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, photoNames);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
+
+//        use this on data update
+//        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+         String photoName = photoNames.get(position);
+        Toast.makeText(getActivity(), "Selected: " + photoName, Toast.LENGTH_LONG   ).show();
     }
 }
