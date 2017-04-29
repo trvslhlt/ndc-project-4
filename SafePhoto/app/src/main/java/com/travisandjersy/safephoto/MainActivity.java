@@ -22,19 +22,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    if (currentFragment instanceof PhotosFragment) {
-                        return false;
-                    }
+                case R.id.navigation_photos:
+                    if (currentFragment instanceof PhotosFragment) { return false; }
                     transitionToFragment(new PhotosFragment());
                     return true;
-                case R.id.navigation_dashboard:
-                    if (currentFragment instanceof UploadFragment) {
-                        return false;
-                    }
+                case R.id.navigation_upload:
+                    if (currentFragment instanceof UploadFragment) { return false; }
                     transitionToFragment(new UploadFragment());
                     return true;
-                case R.id.navigation_notifications:
+                case R.id.navigation_search:
+                    if (currentFragment instanceof SearchFragment) { return false; }
+                    transitionToFragment(new SearchFragment());
+                    return true;
+                case R.id.navigation_signin:
+                    if (currentFragment instanceof SigninFragment) { return false; }
+                    transitionToFragment(new SigninFragment());
                     return true;
             }
             return false;
