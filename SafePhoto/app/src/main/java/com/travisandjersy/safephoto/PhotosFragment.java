@@ -11,7 +11,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.travisandjersy.safephoto.model.Photo;
+import com.travisandjersy.safephoto.service.PhotoService;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by trvslhlt on 4/29/17.
@@ -20,8 +24,8 @@ import java.util.ArrayList;
 public class PhotosFragment extends ListFragment implements OnItemClickListener{
 
     private static final String TAG = "PhotosFragment";
-    ArrayList<String> photoNames = new ArrayList<String>();
     ArrayAdapter<String> adapter;
+    List<String> photoNames;
 
     @Nullable
     @Override
@@ -33,10 +37,8 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        photoNames.add("This");
-        photoNames.add("and");
-        photoNames.add("that");
 
+        photoNames = PhotoService.getPhotoNames();
         adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, photoNames);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
