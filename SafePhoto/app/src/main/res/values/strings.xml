@@ -7,4 +7,6 @@
 
     <string name="authentication_file">authentication_file</string>
     <string name="authentication_token">authentication_token</string>
+    <string name="authentication_signin">Sign In</string>
+    <string name="authentication_signout">Sign Out</string>
 </resources>
