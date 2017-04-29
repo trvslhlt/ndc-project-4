@@ -4,4 +4,7 @@
     <string name="title_upload">Upload</string>
     <string name="title_search">Search</string>
     <string name="title_signin">Sign In</string>
+
+    <string name="authentication_file">authentication_file</string>
+    <string name="authentication_token">authentication_token</string>
 </resources>
