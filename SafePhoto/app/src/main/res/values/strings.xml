@@ -12,4 +12,6 @@
     <string name="authentication_success">Sign In Successful</string>
     <string name="authentication_failure">Sign In FAILED</string>
     <string name="authentication_pending">Signing In...</string>
+
+    <string name="intent_photos_updated">intent_photos_updated</string>
 </resources>

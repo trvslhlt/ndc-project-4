@@ -1,34 +1,31 @@
 package com.travisandjersy.safephoto;
 
-import android.graphics.Color;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.AuthenticationService;
 import com.travisandjersy.safephoto.service.CloudDataService;
-import com.travisandjersy.safephoto.service.CloudStorageService;
 
 public class MainActivity extends AppCompatActivity {
 
     private Fragment currentFragment;
+    private BroadcastReceiver broadcastReceiver;
 
     // MARK: Lifecycle methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AuthenticationService.configure(getApplicationContext());
-
-        Photo photo = new Photo("Photo Name", "local/Filepath", true);
-        photo.remoteURI = "reomte/URI";
-        CloudDataService.uploadObject(photo);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -38,22 +35,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        AuthenticationService.enable();
-        AuthenticationService.createUser("tlh99@cornell.edu", "bad_password", new AuthenticationService.Result() {
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void didComplete(boolean success) {
-                int c = success ? Color.GREEN : Color.RED;
-                currentFragment.getView().setBackgroundColor(c);
+            public void onReceive(Context context, Intent intent) {
+                reloadCurrentFragment();
             }
-        });
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(getString(R.string.intent_photos_updated)));
+
+        AuthenticationService.enable(getApplicationContext());
+        CloudDataService.enable(getApplicationContext());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         AuthenticationService.disable();
+        CloudDataService.disable();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    // MARK: Navigation
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -81,6 +89,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+    private void reloadCurrentFragment() {
+        if (currentFragment == null) {
+            return;
+        }
+        if (currentFragment instanceof PhotosFragment) {
+            transitionToFragment(new PhotosFragment());
+        }
+    }
 
     private void transitionToFragment(Fragment newFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

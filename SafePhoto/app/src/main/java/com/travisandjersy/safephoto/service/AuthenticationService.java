@@ -1,9 +1,6 @@
 package com.travisandjersy.safephoto.service;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -12,9 +9,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.travisandjersy.safephoto.R;
-
-import java.util.Set;
 
 /**
  * Created by trvslhlt on 4/29/17.
@@ -23,7 +17,7 @@ import java.util.Set;
 public class AuthenticationService extends Object {
 
     public interface Result {
-        public void didComplete(boolean success);
+        void didComplete(boolean success);
     }
 
     private static AuthenticationService shared = new AuthenticationService();
@@ -36,7 +30,7 @@ public class AuthenticationService extends Object {
         return (FirebaseAuth.getInstance().getCurrentUser() != null);
     }
 
-    public static void configure(Context context) {
+    public static void enable(Context context) {
         shared.context = context;
         shared.mAuth = FirebaseAuth.getInstance();
         shared.mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -53,10 +47,13 @@ public class AuthenticationService extends Object {
                 // ...
             }
         };
-    }
 
-    public static void enable() {
-        shared.mAuth.addAuthStateListener(shared.mAuthListener);
+        if (shared.mAuth != null) {
+            shared.mAuth.addAuthStateListener(shared.mAuthListener);
+        } else {
+            Log.d(TAG, "nothing");
+        }
+
     }
 
     public static void disable() {

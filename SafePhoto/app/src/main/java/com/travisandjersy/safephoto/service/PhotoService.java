@@ -1,5 +1,7 @@
 package com.travisandjersy.safephoto.service;
 
+import android.os.AsyncTask;
+
 import com.travisandjersy.safephoto.model.Photo;
 
 import java.util.ArrayList;
@@ -11,22 +13,18 @@ import java.util.List;
 
 public class PhotoService {
 
-    public interface Result {
-        public void didComplete(boolean success, String message);
+    public interface UploadResult {
+        public void didComplete(boolean success);
     }
 
     private List<Photo> photos = new ArrayList<Photo>();
     private static PhotoService shared = new PhotoService();
 
-    public static void uploadPhoto(Photo photo, final Result result) {
+    public static void uploadPhoto(Photo photo, final UploadResult result) {
         CloudStorageService.uploadFile(photo.localFilepath, photo.name, new CloudStorageService.UploadResult() {
             @Override
             public void didComplete(boolean success, String downloadURI, String message) {
-                if (success) {
-
-                } else {
-                    result.didComplete(false, message);
-                }
+                result.didComplete(success);
             }
         });
     }
@@ -41,7 +39,6 @@ public class PhotoService {
     }
 
     public static List<Photo> getPhotos() {
-
         if (AuthenticationService.isSignedIn()) {
             return shared.photos;
         } else {
@@ -58,5 +55,11 @@ public class PhotoService {
         }
         return privatePhotos;
     }
+
+    public static void setPhotos(List<Photo> photos) {
+        shared.photos = photos;
+    }
+
+
 
 }
