@@ -52,10 +52,7 @@ public class SigninFragment extends Fragment {
     private void signIn() {
         AuthenticationService.signIn("tlh99@cornell.edu", "bad_password", new AuthenticationService.Result() {
             @Override
-            public void didComplete(boolean success) {
-                String message = success ?
-                        getContext().getString(R.string.authentication_success) :
-                        getContext().getString(R.string.authentication_failure);
+            public void didComplete(boolean success, String message) {
                 Toast.makeText(
                         getActivity(),
                         message,

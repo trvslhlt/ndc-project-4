@@ -1,14 +1,15 @@
 package com.travisandjersy.safephoto.service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.travisandjersy.safephoto.R;
 
 /**
  * Created by trvslhlt on 4/29/17.
@@ -17,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class AuthenticationService extends Object {
 
     public interface Result {
-        void didComplete(boolean success);
+        void didComplete(boolean success, String message);
     }
 
     private static AuthenticationService shared = new AuthenticationService();
@@ -36,24 +37,12 @@ public class AuthenticationService extends Object {
         shared.mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-                // ...
+                // don't think this is being called. but keeping code here until we figure this out
+                // would like for all signin/out to funnel through a single callback
+                Intent intent = new Intent(shared.context.getString(R.string.intent_photos_updated));
+                LocalBroadcastManager.getInstance(shared.context).sendBroadcast(intent);
             }
         };
-
-        if (shared.mAuth != null) {
-            shared.mAuth.addAuthStateListener(shared.mAuthListener);
-        } else {
-            Log.d(TAG, "nothing");
-        }
-
     }
 
     public static void disable() {
@@ -67,8 +56,11 @@ public class AuthenticationService extends Object {
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-                    result.didComplete(task.isSuccessful());
+                    String message = null;
+                    if (task.getException() != null) {
+                        message = task.getException().getMessage();
+                    }
+                    result.didComplete(task.isSuccessful(), message);
                 }
             });
     }
@@ -78,8 +70,15 @@ public class AuthenticationService extends Object {
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                    result.didComplete(task.isSuccessful());
+                    String message = task.isSuccessful() ?
+                            shared.context.getString(R.string.authentication_success) :
+                            shared.context.getString(R.string.authentication_failure);
+                    result.didComplete(task.isSuccessful(), message);
+
+                    if (task.isSuccessful()) {
+                        Intent intent = new Intent(shared.context.getString(R.string.intent_photos_updated));
+                        LocalBroadcastManager.getInstance(shared.context).sendBroadcast(intent);
+                    }
                 }
             });
     }
@@ -87,5 +86,4 @@ public class AuthenticationService extends Object {
     public static void signOut() {
         shared.mAuth.signOut();
     }
-
 }

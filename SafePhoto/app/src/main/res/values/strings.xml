@@ -14,4 +14,5 @@
     <string name="authentication_pending">Signing In...</string>
 
     <string name="intent_photos_updated">intent_photos_updated</string>
+    <string name="intent_authentication_updated">intent_authentication_updated</string>
 </resources>
