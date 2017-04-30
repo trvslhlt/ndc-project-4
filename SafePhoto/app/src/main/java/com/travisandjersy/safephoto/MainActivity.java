@@ -8,11 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.travisandjersy.safephoto.service.AuthenticationService;
-
-import static android.R.attr.value;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,11 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AuthenticationService.setConfiguration(getApplicationContext());
-
-        // this is here as a mock authentication action
-        // can remove at any time
-        AuthenticationService.setAuthenticationToken("junk");
+        AuthenticationService.configure(getApplicationContext());
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

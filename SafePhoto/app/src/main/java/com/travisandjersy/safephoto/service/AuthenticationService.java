@@ -32,11 +32,11 @@ public class AuthenticationService extends Object {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    public static boolean isAuthenticated() {
-        return (getAuthenticationToken() != null);
+    public static boolean isSignedIn() {
+        return (FirebaseAuth.getInstance().getCurrentUser() != null);
     }
 
-    public static void setConfiguration(Context context) {
+    public static void configure(Context context) {
         shared.context = context;
         shared.mAuth = FirebaseAuth.getInstance();
         shared.mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -76,25 +76,19 @@ public class AuthenticationService extends Object {
             });
     }
 
-    public static void setAuthenticationToken(String token) {
-        SharedPreferences preferences = shared.getPreferences();
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(shared.getAuthenticationTokenKey(), token);
-        editor.apply();
+    public static void signIn(String email, String password, final Result result) {
+        shared.mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                    result.didComplete(task.isSuccessful());
+                }
+            });
     }
 
-    public static String getAuthenticationToken() {
-        SharedPreferences preferences = shared.getPreferences();
-        return preferences.getString(shared.getAuthenticationTokenKey(), null);
-    }
-
-    private SharedPreferences getPreferences() {
-        String authenticationFileKey = shared.context.getResources().getString(R.string.authentication_file);
-        return shared.context.getSharedPreferences(authenticationFileKey, Context.MODE_PRIVATE);
-    }
-
-    private String getAuthenticationTokenKey() {
-        return shared.context.getResources().getString(R.string.authentication_token);
+    public static void signOut() {
+        shared.mAuth.signOut();
     }
 
 }

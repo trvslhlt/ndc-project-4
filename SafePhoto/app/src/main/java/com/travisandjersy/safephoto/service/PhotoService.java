@@ -28,7 +28,7 @@ public class PhotoService {
             shared.createPhotos();
         }
 
-        if (AuthenticationService.isAuthenticated()) {
+        if (AuthenticationService.isSignedIn()) {
             return shared.photos;
         } else {
             return shared.getPublicPhotos();
@@ -46,6 +46,7 @@ public class PhotoService {
     }
 
     private void createPhotos() {
+        // mock photos until we get some uploaded to Firebase
         photos.add(new Photo("TravisPriavte", true));
         photos.add(new Photo("JersyPrivate", true));
         photos.add(new Photo("MarisaPublic", false));

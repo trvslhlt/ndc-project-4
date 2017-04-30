@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.travisandjersy.safephoto.service.AuthenticationService;
 
@@ -27,7 +28,7 @@ public class SigninFragment extends Fragment {
         signInOrOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AuthenticationService.isAuthenticated()) {
+                if (AuthenticationService.isSignedIn()) {
                     signOut();
                 } else {
                     signIn();
@@ -44,17 +45,33 @@ public class SigninFragment extends Fragment {
     }
 
     private void signOut() {
-        AuthenticationService.setAuthenticationToken(null);
+        AuthenticationService.signOut();
         configureViewForAuthenticationState();
     }
 
     private void signIn() {
-        AuthenticationService.setAuthenticationToken("junk");
-        configureViewForAuthenticationState();
+        AuthenticationService.signIn("tlh99@cornell.edu", "bad_password", new AuthenticationService.Result() {
+            @Override
+            public void didComplete(boolean success) {
+                String message = success ?
+                        getContext().getString(R.string.authentication_success) :
+                        getContext().getString(R.string.authentication_failure);
+                Toast.makeText(
+                        getActivity(),
+                        message,
+                        Toast.LENGTH_LONG).show();
+                configureViewForAuthenticationState();
+            }
+        });
+        Toast.makeText(
+                getActivity(),
+                getContext().getString(R.string.authentication_pending),
+                Toast.LENGTH_LONG).show();
+
     }
 
     private void configureViewForAuthenticationState() {
-        if (AuthenticationService.isAuthenticated()) {
+        if (AuthenticationService.isSignedIn()) {
             signInOrOutButton.setText(R.string.authentication_signout);
         } else {
             signInOrOutButton.setText(R.string.authentication_signin);

@@ -9,4 +9,7 @@
     <string name="authentication_token">authentication_token</string>
     <string name="authentication_signin">Sign In</string>
     <string name="authentication_signout">Sign Out</string>
+    <string name="authentication_success">Sign In Successful</string>
+    <string name="authentication_failure">Sign In FAILED</string>
+    <string name="authentication_pending">Signing In...</string>
 </resources>
