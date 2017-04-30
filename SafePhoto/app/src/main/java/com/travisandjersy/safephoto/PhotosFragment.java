@@ -1,20 +1,22 @@
 package com.travisandjersy.safephoto;
 
+import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.PhotoService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,9 +49,24 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener{
 //        adapter.notifyDataSetChanged();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-         String photoName = photoNames.get(position);
-        Toast.makeText(getActivity(), "Selected: " + photoName, Toast.LENGTH_LONG   ).show();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.photo_view, null);
+        ImageView imageView = (ImageView) dialogView.findViewById(R.id.image_view);
+        builder.setView(dialogView);
+
+        Dialog dialog = builder.create();
+
+        String photoName = photoNames.get(position);
+//        Dialog dialog = new Dialog(getContext());
+//        dialog.setContentView(android.R.layout.select_dialog_item);
+        dialog.setTitle(photoName);
+        dialog.show();
+
+//        Toast.makeText(getActivity(), "Selected: " + photoName, Toast.LENGTH_LONG   ).show();
     }
 }
