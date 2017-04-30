@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "247742135840",
+    "firebase_url": "https://safephoto-cbcf7.firebaseio.com",
+    "project_id": "safephoto-cbcf7",
+    "storage_bucket": "safephoto-cbcf7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247742135840:android:e624b86de4f32764",
+        "android_client_info": {
+          "package_name": "com.travisandjersy.safephoto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247742135840-3jeab3auqei5pkc0fqr8159g94a8mdo5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.travisandjersy.safephoto",
+            "certificate_hash": "105bfcf0dc2b0cff07e5da9c774494d51101aa8e"
+          }
+        },
+        {
+          "client_id": "247742135840-705q9ged2bc21dh9p1cjfbbnchvh1i1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC_l5x60Py8SzrQ9Ek-dwVbLN2NU_-8uA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247742135840-705q9ged2bc21dh9p1cjfbbnchvh1i1a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

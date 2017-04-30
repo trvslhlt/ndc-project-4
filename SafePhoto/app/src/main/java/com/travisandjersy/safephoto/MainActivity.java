@@ -1,5 +1,6 @@
 package com.travisandjersy.safephoto;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,6 +17,41 @@ import static android.R.attr.value;
 public class MainActivity extends AppCompatActivity {
 
     private Fragment currentFragment;
+
+    // MARK: Lifecycle methods
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        AuthenticationService.setConfiguration(getApplicationContext());
+
+        // this is here as a mock authentication action
+        // can remove at any time
+        AuthenticationService.setAuthenticationToken("junk");
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        transitionToFragment(new PhotosFragment());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AuthenticationService.enable();
+        AuthenticationService.createUser("tlh99@cornell.edu", "bad_password", new AuthenticationService.Result() {
+            @Override
+            public void didComplete(boolean success) {
+                int c = success ? Color.GREEN : Color.RED;
+                currentFragment.getView().setBackgroundColor(c);
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AuthenticationService.disable();
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -44,21 +80,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        AuthenticationService.setContext(getApplicationContext());
-
-        // this is here as a mock authentication action
-        // can remove at any time
-        AuthenticationService.setAuthenticationToken("junk");
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        transitionToFragment(new PhotosFragment());
-    }
 
     private void transitionToFragment(Fragment newFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
