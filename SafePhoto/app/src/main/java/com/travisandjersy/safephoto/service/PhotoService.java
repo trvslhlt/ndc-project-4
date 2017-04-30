@@ -11,8 +11,25 @@ import java.util.List;
 
 public class PhotoService {
 
+    public interface Result {
+        public void didComplete(boolean success, String message);
+    }
+
     private List<Photo> photos = new ArrayList<Photo>();
     private static PhotoService shared = new PhotoService();
+
+    public static void uploadPhoto(Photo photo, final Result result) {
+        CloudStorageService.uploadFile(photo.localFilepath, photo.name, new CloudStorageService.UploadResult() {
+            @Override
+            public void didComplete(boolean success, String downloadURI, String message) {
+                if (success) {
+
+                } else {
+                    result.didComplete(false, message);
+                }
+            }
+        });
+    }
 
     public static List<String>getPhotoNames() {
         List<String> photoNames = new ArrayList<String>();
@@ -24,9 +41,6 @@ public class PhotoService {
     }
 
     public static List<Photo> getPhotos() {
-        if (shared.photos.isEmpty()) {
-            shared.createPhotos();
-        }
 
         if (AuthenticationService.isSignedIn()) {
             return shared.photos;
@@ -43,13 +57,6 @@ public class PhotoService {
             }
         }
         return privatePhotos;
-    }
-
-    private void createPhotos() {
-        // mock photos until we get some uploaded to Firebase
-        photos.add(new Photo("TravisPriavte", true));
-        photos.add(new Photo("JersyPrivate", true));
-        photos.add(new Photo("MarisaPublic", false));
     }
 
 }

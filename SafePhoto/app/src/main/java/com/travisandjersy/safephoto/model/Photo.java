@@ -1,5 +1,7 @@
 package com.travisandjersy.safephoto.model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by trvslhlt on 4/29/17.
  */
@@ -7,10 +9,14 @@ package com.travisandjersy.safephoto.model;
 public class Photo extends Object {
 
     public String name;
+    public String localFilepath;
+    public String remoteURI;
     public boolean isPrivate;
 
-    public Photo(String name, boolean isPrivate) {
+
+    public Photo(String name, String localFilepath, boolean isPrivate) {
         this.name = name;
+        this.localFilepath = localFilepath;
         this.isPrivate = isPrivate;
     }
 

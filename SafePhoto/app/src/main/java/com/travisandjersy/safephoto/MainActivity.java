@@ -7,9 +7,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.AuthenticationService;
+import com.travisandjersy.safephoto.service.CloudDataService;
+import com.travisandjersy.safephoto.service.CloudStorageService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         AuthenticationService.configure(getApplicationContext());
+
+        Photo photo = new Photo("Photo Name", "local/Filepath", true);
+        photo.remoteURI = "reomte/URI";
+        CloudDataService.uploadObject(photo);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
