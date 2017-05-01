@@ -1,6 +1,7 @@
 package com.travisandjersy.safephoto;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,19 +16,21 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.PhotoService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by trvslhlt on 4/29/17.
  */
 
-public class PhotosFragment extends ListFragment implements OnItemClickListener{
+public class PhotosFragment extends ListFragment implements OnItemClickListener {
 
     private static final String TAG = "PhotosFragment";
     ArrayAdapter<String> adapter;
-    List<String> photoNames;
+    List<Photo> photos;
 
     @Nullable
     @Override
@@ -38,15 +41,11 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
-        photoNames = PhotoService.getPhotoNames();
+        photos = PhotoService.getPhotos();
+        List<String> photoNames = PhotoService.getPhotoNames();
         adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, photoNames);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
-
-//        use this on data update
-//        adapter.notifyDataSetChanged();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -56,17 +55,19 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.photo_view, null);
-        ImageView imageView = (ImageView) dialogView.findViewById(R.id.image_view);
         builder.setView(dialogView);
 
         Dialog dialog = builder.create();
+        Photo photo = photos.get(position);
+        dialog.setTitle(photo.name);
+        ImageView imageView = (ImageView) dialogView.findViewById(R.id.image_view);
+        imageView.setImageBitmap(getBitmapFromFilepath(photo.localFilepath));
 
-        String photoName = photoNames.get(position);
-//        Dialog dialog = new Dialog(getContext());
-//        dialog.setContentView(android.R.layout.select_dialog_item);
-        dialog.setTitle(photoName);
         dialog.show();
+    }
 
-//        Toast.makeText(getActivity(), "Selected: " + photoName, Toast.LENGTH_LONG   ).show();
+    private Bitmap getBitmapFromFilepath(String filepath) {
+        //
+        return null;
     }
 }

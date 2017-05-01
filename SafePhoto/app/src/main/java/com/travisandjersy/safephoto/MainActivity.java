@@ -11,13 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.AuthenticationService;
 import com.travisandjersy.safephoto.service.CloudDataService;
-import com.travisandjersy.safephoto.service.PhotoService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,11 +54,6 @@ public class MainActivity extends AppCompatActivity {
         AuthenticationService.disable();
         CloudDataService.disable();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     // MARK: Navigation
@@ -104,11 +96,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void transitionToFragment(Fragment newFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                if (currentFragment != null) {
-                    transaction.remove(currentFragment);
-                }
-                transaction.add(R.id.content, newFragment)
-                .commit();
+        if (currentFragment != null) {
+            transaction.remove(currentFragment);
+        }
+        transaction.add(R.id.content, newFragment).commit();
         currentFragment = newFragment;
     }
 }
