@@ -11,10 +11,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.AuthenticationService;
 import com.travisandjersy.safephoto.service.CloudDataService;
+import com.travisandjersy.safephoto.service.PhotoService;
 
 public class MainActivity extends AppCompatActivity {
 

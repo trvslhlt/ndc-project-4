@@ -33,7 +33,7 @@ public class CloudDataService {
     public static void enable(final Context context) {
         shared.context = context;
         DatabaseReference rootReference = shared.database.getReference();
-        shared.reference = rootReference.child("junk");
+        shared.reference = rootReference.child("photos");
         shared.eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -67,7 +67,7 @@ public class CloudDataService {
 
     public static void uploadObject(Object object) {
         DatabaseReference rootReference = shared.database.getReference();
-        DatabaseReference reference = rootReference.child("junk");
+        DatabaseReference reference = rootReference.child("photos");
 
         DatabaseReference newPostRef = reference.push();
         newPostRef.setValue(object);
