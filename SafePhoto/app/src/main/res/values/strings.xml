@@ -18,4 +18,8 @@
 
     <string name="intent_photos_updated">intent_photos_updated</string>
     <string name="intent_authentication_updated">intent_authentication_updated</string>
+
+    <string name="take_picture_button">Take Picture</string>
+    <string name="upload_instructions_text">Please sign in to upload photos.</string>
+    <string name="upload_image">Upload Image</string>
 </resources>
