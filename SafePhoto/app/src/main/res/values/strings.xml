@@ -12,6 +12,9 @@
     <string name="authentication_success">Sign In Successful</string>
     <string name="authentication_failure">Sign In FAILED</string>
     <string name="authentication_pending">Signing In...</string>
+    <string name="sign_in_email_title">Email</string>
+    <string name="sign_in_password_title">Password</string>
+    <string name="sign_up">Sign Up</string>
 
     <string name="intent_photos_updated">intent_photos_updated</string>
     <string name="intent_authentication_updated">intent_authentication_updated</string>
