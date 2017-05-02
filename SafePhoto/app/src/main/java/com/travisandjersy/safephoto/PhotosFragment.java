@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.travisandjersy.safephoto.model.Photo;
+import com.travisandjersy.safephoto.service.CloudDataService;
 import com.travisandjersy.safephoto.service.PhotoService;
 
 import java.util.ArrayList;
@@ -46,6 +47,18 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
         adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, photoNames);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        CloudDataService.enable(getContext());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        CloudDataService.disable();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

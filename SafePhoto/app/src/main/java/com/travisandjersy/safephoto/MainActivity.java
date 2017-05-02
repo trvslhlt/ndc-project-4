@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 new IntentFilter(getString(R.string.intent_photos_updated)));
 
         AuthenticationService.enable(getApplicationContext());
-        CloudDataService.enable(getApplicationContext());
     }
 
     @Override
