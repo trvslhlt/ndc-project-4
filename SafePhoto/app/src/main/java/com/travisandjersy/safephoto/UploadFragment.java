@@ -11,10 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.AuthenticationService;
+
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -22,14 +28,22 @@ import static android.app.Activity.RESULT_OK;
  * Created by trvslhlt on 4/29/17.
  */
 
-public class UploadFragment extends Fragment {
+public class UploadFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "UploadFragment";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     Button takePictureButton;
     Button uploadImagebutton;
+    Button commitUploadButton;
+    Button radioPrivateButton;
+    Button radioPublicButton;
     ImageView imagePreview;
     TextView signInPrompt;
+    EditText description;
+    TextView des;
+    boolean checked;
+    boolean isPrivate;
+
 
     @Nullable
     @Override
@@ -38,7 +52,12 @@ public class UploadFragment extends Fragment {
         signInPrompt = (TextView) view.findViewById(R.id.upload_instructions_text_view);
         takePictureButton = (Button) view.findViewById(R.id.take_picture_button);
         uploadImagebutton = (Button) view.findViewById(R.id.upload_image_button);
+        commitUploadButton = (Button) view.findViewById(R.id.commit_upload_button);
+        radioPrivateButton = (Button) view.findViewById(R.id.radio_private);
+        radioPublicButton = (Button) view.findViewById(R.id.radio_public);
         imagePreview = (ImageView) view.findViewById(R.id.pre_upload_image_preview);
+        description = (EditText) view.findViewById(R.id.upload_description_field);
+        des = (TextView) view.findViewById(R.id.upload_description_title);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,8 +70,30 @@ public class UploadFragment extends Fragment {
                 uploadImage();
             }
         });
+        commitUploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commitUpload();
+            }
+        });
+        radioPrivateButton.setOnClickListener(this);
+        radioPublicButton.setOnClickListener(this);
+        checked = false;
+        isPrivate = false;
         configureForAuthenticationState();
         return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        checked = ((RadioButton)view).isChecked();
+        switch(view.getId()){
+            case R.id.radio_private:
+                Toast.makeText(getActivity(), "Private is checked", Toast.LENGTH_LONG ).show();
+                isPrivate = true;
+            case R.id.radio_public:
+                Toast.makeText(getActivity(), "Public is checked", Toast.LENGTH_LONG ).show();
+        }
     }
 
     private void takePicture() {
@@ -64,7 +105,28 @@ public class UploadFragment extends Fragment {
     }
 
     private void uploadImage() {
-        Log.d(TAG, "need to implement uploadImage");
+        description.setVisibility(View.VISIBLE);
+        des.setVisibility(View.VISIBLE);
+        commitUploadButton.setVisibility(View.VISIBLE);
+        radioPublicButton.setVisibility(View.VISIBLE);
+        radioPrivateButton.setVisibility(View.VISIBLE);
+    }
+
+    private void commitUpload() {
+        if (description.getText() == null) {
+            Toast.makeText(getActivity(), "no name", Toast.LENGTH_LONG ).show();
+            return;
+        }
+        if (!checked) {
+            Toast.makeText(getActivity(), "no checked", Toast.LENGTH_LONG ).show();
+            return;
+        }
+        Photo photo = new Photo(description.getText().toString(), isPrivate);
+        Log.e("Photo name", photo.name);
+        if (photo.isPrivate) Log.e("Photo private", "private");
+        else Log.e("Photo private", "public");
+        Log.e("Photo description", photo.description);
+
     }
 
     @Override
@@ -86,5 +148,10 @@ public class UploadFragment extends Fragment {
             takePictureButton.setEnabled(false);
             signInPrompt.setVisibility(View.VISIBLE);
         }
+        description.setVisibility(View.GONE);
+        des.setVisibility(View.GONE);
+        commitUploadButton.setVisibility(View.GONE);
+        radioPrivateButton.setVisibility(View.GONE);
+        radioPublicButton.setVisibility(View.GONE);
     }
 }

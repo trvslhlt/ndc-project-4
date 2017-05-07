@@ -31,4 +31,42 @@
         android:layout_height="wrap_content"
         android:text="@string/upload_image"
         android:enabled="false"/>
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton android:id="@+id/radio_private"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_private" />
+        <RadioButton android:id="@+id/radio_public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_public" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/upload_description_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/upload_description" />
+
+    <EditText
+        android:id="@+id/upload_description_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="20"
+        android:inputType="text"
+        android:background="#FFF"/>
+
+    <Button
+        android:id="@+id/commit_upload_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/commit_upload_button"
+        android:enabled="false"/>
+
 </LinearLayout>

@@ -21,7 +21,7 @@ public class PhotoService {
     private static PhotoService shared = new PhotoService();
 
     public static void uploadPhoto(Photo photo, final UploadResult result) {
-        CloudStorageService.uploadFile(photo.localFilepath, photo.name, new CloudStorageService.UploadResult() {
+        CloudStorageService.uploadFile(photo.name, new CloudStorageService.UploadResult() {
             @Override
             public void didComplete(boolean success, String downloadURI, String message) {
                 result.didComplete(success);

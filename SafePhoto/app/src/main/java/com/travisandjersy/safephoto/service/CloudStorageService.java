@@ -29,7 +29,7 @@ public class CloudStorageService {
         public void didComplete(boolean success, String downloadURI, String message);
     }
 
-    public static void uploadFile(String localFilepath, String filename, final UploadResult result) {
+    public static void uploadFile(String filename, final UploadResult result) {
         Uri file = Uri.fromFile(new File(localFilepath));
         StorageReference photosRef = shared.mStorageRef.child(filename);
 

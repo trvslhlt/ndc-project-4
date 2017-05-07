@@ -74,7 +74,7 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
         Photo photo = photos.get(position);
         dialog.setTitle(photo.name);
         ImageView imageView = (ImageView) dialogView.findViewById(R.id.image_view);
-        imageView.setImageBitmap(getBitmapFromFilepath(photo.localFilepath));
+        //imageView.setImageBitmap(getBitmapFromFilepath(photo.localFilepath));
 
         dialog.show();
     }
