@@ -2,6 +2,7 @@ package com.travisandjersy.safephoto;
 
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,13 +16,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.CloudDataService;
 import com.travisandjersy.safephoto.service.PhotoService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,8 +82,12 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
         Photo photo = photos.get(position);
         dialog.setTitle(photo.name);
         ImageView imageView = (ImageView) dialogView.findViewById(R.id.image_view);
-        imageView.setImageBitmap(getBitmapFromFilepath(photo.localFilepath));
 
+        Bitmap bitmap = getBitmapFromFilepath(photo.localFilepath);
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.placeholder);
+        }
+        imageView.setImageBitmap(bitmap);
         dialog.show();
     }
 
