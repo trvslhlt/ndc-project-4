@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.CloudDataService;
+import com.travisandjersy.safephoto.service.LocalStorageService;
 import com.travisandjersy.safephoto.service.PhotoService;
 
 import java.util.List;
@@ -83,16 +84,11 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
         dialog.setTitle(photo.name);
         ImageView imageView = (ImageView) dialogView.findViewById(R.id.image_view);
 
-        Bitmap bitmap = getBitmapFromFilepath(photo.localFilepath);
+        Bitmap bitmap = LocalStorageService.getImageWithFilepath(photo.localFilepath);
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.placeholder);
         }
         imageView.setImageBitmap(bitmap);
         dialog.show();
-    }
-
-    private Bitmap getBitmapFromFilepath(String filepath) {
-        //
-        return null;
     }
 }

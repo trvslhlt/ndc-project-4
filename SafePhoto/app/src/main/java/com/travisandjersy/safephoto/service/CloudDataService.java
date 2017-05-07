@@ -43,6 +43,7 @@ public class CloudDataService {
                     photos.add(photo);
                 }
                 PhotoService.setPhotos(photos);
+                CloudStorageService.downloadImagesForPhotos(photos);
                 Intent intent = new Intent(context.getString(R.string.intent_photos_updated));
                 LocalBroadcastManager.getInstance(shared.context).sendBroadcast(intent);
             }
