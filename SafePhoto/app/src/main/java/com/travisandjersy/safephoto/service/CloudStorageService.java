@@ -34,9 +34,9 @@ public class CloudStorageService {
         public void didComplete(boolean success, String downloadURI, String message);
     }
 
-    public static void uploadFile(String filename, final UploadResult result) {
-        Uri file = Uri.fromFile(new File(localFilepath));
-        StorageReference photosRef = shared.mStorageRef.child(filename);
+    public static void uploadFile(String name, final UploadResult result) {
+        Uri file = Uri.fromFile(new File(name));
+        StorageReference photosRef = shared.mStorageRef.child(name);
 
         photosRef.putFile(file)
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -56,7 +56,7 @@ public class CloudStorageService {
 
     public static void downloadImagesForPhotos(List<Photo> photos) {
         for (final Photo photo : photos) {
-            if (LocalStorageService.getImageWithFilepath(photo.localFilepath) != null) {
+            if (LocalStorageService.getImageWithName(photo.name) != null) {
                 continue;
             }
             StorageReference imageReference = shared.mStorageRef.child(photo.name);
@@ -66,7 +66,7 @@ public class CloudStorageService {
                 public void onSuccess(byte[] bytes) {
                     Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     if (image != null) {
-                        LocalStorageService.setImageWithFilepath(photo.localFilepath, image);
+                        LocalStorageService.setImageWithName(photo.name, image);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {

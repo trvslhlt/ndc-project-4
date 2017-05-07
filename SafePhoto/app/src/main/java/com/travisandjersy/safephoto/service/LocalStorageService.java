@@ -17,12 +17,12 @@ public class LocalStorageService {
 
     private LocalStorageService() {}
 
-    public static Bitmap getImageWithFilepath(String filepath) {
-        return shared.images.get(filepath);
+    public static Bitmap getImageWithName(String name) {
+        return shared.images.get(name);
     }
 
-    public static void setImageWithFilepath(String filepath, Bitmap image) {
-        shared.images.put(filepath, image);
+    public static void setImageWithName(String name, Bitmap image) {
+        shared.images.put(name, image);
     }
 
 }
