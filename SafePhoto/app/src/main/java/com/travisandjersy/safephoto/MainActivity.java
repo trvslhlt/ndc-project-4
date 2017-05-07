@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         transitionToFragment(new PhotosFragment());
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                reloadCurrentFragment();
+                updateFragmentData();
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
@@ -84,12 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
-    private void reloadCurrentFragment() {
+    private void updateFragmentData() {
         if (currentFragment == null) {
             return;
         }
         if (currentFragment instanceof PhotosFragment) {
-            transitionToFragment(new PhotosFragment());
+            PhotosFragment photosFragment = (PhotosFragment) currentFragment;
+            photosFragment.update();
         }
     }
 

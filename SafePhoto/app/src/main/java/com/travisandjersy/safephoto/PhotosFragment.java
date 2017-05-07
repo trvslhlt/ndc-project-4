@@ -2,6 +2,7 @@ package com.travisandjersy.safephoto;
 
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,9 +19,9 @@ import android.widget.ImageView;
 
 import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.CloudDataService;
+import com.travisandjersy.safephoto.service.LocalStorageService;
 import com.travisandjersy.safephoto.service.PhotoService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +62,14 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
         CloudDataService.disable();
     }
 
+    public void update() {
+        photos = PhotoService.getPhotos();
+        List<String> photoNames = PhotoService.getPhotoNames();
+        adapter.clear();
+        adapter.addAll(photoNames);
+        adapter.notifyDataSetChanged();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -74,13 +83,12 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
         Photo photo = photos.get(position);
         dialog.setTitle(photo.name);
         ImageView imageView = (ImageView) dialogView.findViewById(R.id.image_view);
-        //imageView.setImageBitmap(getBitmapFromFilepath(photo.localFilepath));
 
+        Bitmap bitmap = LocalStorageService.getImageWithFilepath(photo.localFilepath);
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.placeholder);
+        }
+        imageView.setImageBitmap(bitmap);
         dialog.show();
-    }
-
-    private Bitmap getBitmapFromFilepath(String filepath) {
-        //
-        return null;
     }
 }
