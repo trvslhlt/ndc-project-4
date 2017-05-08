@@ -1,6 +1,7 @@
 package com.travisandjersy.safephoto;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ public class SigninFragment extends Fragment {
 
     Button signInOrOutButton;
     Button signupButton;
+    Button googleSignIn;
     EditText emailField;
     EditText passwordField;
 
@@ -57,6 +59,18 @@ public class SigninFragment extends Fragment {
         });
         emailField = (EditText) view.findViewById(R.id.sign_in_email_field);
         passwordField = (EditText) view.findViewById(R.id.sign_in_password_field);
+        googleSignIn = (Button) view.findViewById(R.id.google_sign_in_button);
+        googleSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AuthenticationService.isSignedIn()) {
+                    signOut();
+                } else {
+                    startActivity(new Intent(getActivity(), GoogleSignInActivity.class));
+                }
+            }
+        });
+
         configureViewForAuthenticationState();
         return view;
     }
