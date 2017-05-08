@@ -13,6 +13,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.travisandjersy.safephoto.model.Photo;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class CloudStorageService {
     }
 
     public interface UploadResult {
-        public void didComplete(boolean success, String downloadURI, String message);
+        public void didComplete(boolean success, String message);
     }
 
     public static void uploadFile(String name, final UploadResult result) {
@@ -42,17 +44,42 @@ public class CloudStorageService {
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    @SuppressWarnings("VisibleForTests")String downloadURI = taskSnapshot.getDownloadUrl().toString();
-                    result.didComplete(true, downloadURI, null);
+                    result.didComplete(true, null);
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    result.didComplete(false, null, exception.getMessage());
+                    result.didComplete(false, exception.getMessage());
                 }
             });
     }
+
+
+    public static void uploadImage(Bitmap image, String imageName, final UploadResult result) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference imageReference = shared.mStorageRef.child(imageName);
+        UploadTask uploadTask = imageReference.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                result.didComplete(false, exception.getMessage());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+//                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                result.didComplete(true, null);
+            }
+        });
+    }
+
 
     public static void downloadImagesForPhotos(List<Photo> photos) {
         for (final Photo photo : photos) {

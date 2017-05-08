@@ -17,35 +17,48 @@ public class PhotoService {
         public void didComplete(boolean success);
     }
 
-    private List<Photo> photos = new ArrayList<Photo>();
+    private List<Photo> publicPhotos = new ArrayList<Photo>();
+    private List<Photo> privatePhotos = new ArrayList<Photo>();
     private static PhotoService shared = new PhotoService();
 
+    /*
     public static void uploadPhoto(Photo photo, final UploadResult result) {
         CloudStorageService.uploadFile(photo.name, new CloudStorageService.UploadResult() {
             @Override
-            public void didComplete(boolean success, String downloadURI, String message) {
+            public void didComplete(boolean success, String message) {
                 result.didComplete(success);
             }
         });
     }
+    */
 
-    public static List<String>getPhotoNames() {
+    public static List<String>getPublicPhotoNames() {
         List<String> photoNames = new ArrayList<String>();
-        List<Photo> photos =getPhotos();
+        List<Photo> photos = getPublicPhotos();
         for (Photo photo : photos) {
-            photoNames.add(photo.name);
+            photoNames.add(photo.description);
         }
         return photoNames;
     }
 
-    public static List<Photo> getPhotos() {
-        if (AuthenticationService.isSignedIn()) {
-            return shared.photos;
-        } else {
-            return shared.getPublicPhotos();
-        }
+    public static List<Photo> getPublicPhotos() {
+        return shared.publicPhotos;
     }
 
+    public static List<String>getPrivatePhotoNames() {
+        List<String> photoNames = new ArrayList<String>();
+        List<Photo> photos = getPrivatePhotos();
+        for (Photo photo : photos) {
+            photoNames.add(photo.description);
+        }
+        return photoNames;
+    }
+
+    public static List<Photo> getPrivatePhotos() {
+        return shared.privatePhotos;
+    }
+
+    /*
     private List<Photo> getPublicPhotos() {
         List<Photo> privatePhotos = new ArrayList<Photo>();
         for (Photo photo : photos) {
@@ -55,10 +68,15 @@ public class PhotoService {
         }
         return privatePhotos;
     }
+    */
 
-    public static void setPhotos(List<Photo> photos) {
-        shared.photos = photos;
+    public static void setPublicPhotos(List<Photo> photos) {
+        shared.publicPhotos = photos;
     }
+    public static void setPrivatePhotos(List<Photo> photos) {
+        shared.privatePhotos = photos;
+    }
+
 
 
 

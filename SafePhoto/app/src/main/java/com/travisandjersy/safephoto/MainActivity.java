@@ -27,8 +27,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        if (!AuthenticationService.isSignedIn())
+            navigation.getMenu().findItem(R.id.navigation_private_photos).setEnabled(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        transitionToFragment(new PhotosFragment());
+        AuthenticationService.enable(getApplicationContext());
+        CloudDataService.enable(getApplicationContext());
+        //transitionToFragment(new PublicPhotosFragment());
     }
 
     @Override
@@ -43,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
                 new IntentFilter(getString(R.string.intent_photos_updated)));
 
-        AuthenticationService.enable(getApplicationContext());
+        transitionToFragment(new PublicPhotosFragment());
+
+        //AuthenticationService.enable(getApplicationContext());
+        //CloudDataService.enable(getApplicationContext());
     }
 
     @Override
@@ -62,8 +69,12 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_photos:
-                    if (currentFragment instanceof PhotosFragment) { return false; }
-                    transitionToFragment(new PhotosFragment());
+                    if (currentFragment instanceof PublicPhotosFragment) { return false; }
+                    transitionToFragment(new PublicPhotosFragment());
+                    return true;
+                case R.id.navigation_private_photos:
+                    if (currentFragment instanceof PrivatePhotosFragment) { return false; }
+                    transitionToFragment(new PrivatePhotosFragment());
                     return true;
                 case R.id.navigation_upload:
                     if (currentFragment instanceof UploadFragment) { return false; }
@@ -87,8 +98,12 @@ public class MainActivity extends AppCompatActivity {
         if (currentFragment == null) {
             return;
         }
-        if (currentFragment instanceof PhotosFragment) {
-            PhotosFragment photosFragment = (PhotosFragment) currentFragment;
+        if (currentFragment instanceof PublicPhotosFragment) {
+            PublicPhotosFragment photosFragment = (PublicPhotosFragment) currentFragment;
+            photosFragment.update();
+        }
+        if (currentFragment instanceof PrivatePhotosFragment) {
+            PrivatePhotosFragment photosFragment = (PrivatePhotosFragment) currentFragment;
             photosFragment.update();
         }
     }

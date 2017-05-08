@@ -4,7 +4,12 @@
     <item
         android:id="@+id/navigation_photos"
         android:icon="@android:drawable/picture_frame"
-        android:title="@string/title_photos" />
+        android:title="@string/title_public_photos" />
+
+    <item
+        android:id="@+id/navigation_private_photos"
+        android:icon="@android:drawable/picture_frame"
+        android:title="@string/title_private_photos" />
 
     <item
         android:id="@+id/navigation_upload"

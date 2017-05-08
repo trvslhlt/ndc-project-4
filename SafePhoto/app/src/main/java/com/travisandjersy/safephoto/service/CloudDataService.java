@@ -26,15 +26,18 @@ public class CloudDataService {
     private static String TAG = "CloudDataService";
     private static CloudDataService shared = new CloudDataService();
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference reference;
-    private ValueEventListener eventListener;
+    private DatabaseReference publicReference;
+    private DatabaseReference privateReference;
+    private ValueEventListener publicEventListener;
+    private ValueEventListener privateEventListener;
     private Context context;
 
     public static void enable(final Context context) {
         shared.context = context;
         DatabaseReference rootReference = shared.database.getReference();
-        shared.reference = rootReference.child("photos");
-        shared.eventListener = new ValueEventListener() {
+        shared.publicReference = rootReference.child("publicPhotos");
+        shared.privateReference = rootReference.child(AuthenticationService.getUserUID());
+        shared.publicEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Photo> photos = new ArrayList<Photo>();
@@ -42,7 +45,7 @@ public class CloudDataService {
                     Photo photo = ds.getValue(Photo.class);
                     photos.add(photo);
                 }
-                PhotoService.setPhotos(photos);
+                PhotoService.setPublicPhotos(photos);
                 CloudStorageService.downloadImagesForPhotos(photos);
                 Intent intent = new Intent(context.getString(R.string.intent_photos_updated));
                 LocalBroadcastManager.getInstance(shared.context).sendBroadcast(intent);
@@ -53,12 +56,37 @@ public class CloudDataService {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         };
-        shared.reference.addValueEventListener(shared.eventListener);
+        shared.publicReference.addValueEventListener(shared.publicEventListener);
+
+        shared.privateEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Photo> photos = new ArrayList<Photo>();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Photo photo = ds.getValue(Photo.class);
+                    photos.add(photo);
+                }
+                PhotoService.setPrivatePhotos(photos);
+                CloudStorageService.downloadImagesForPhotos(photos);
+                Intent intent = new Intent(context.getString(R.string.intent_photos_updated));
+                LocalBroadcastManager.getInstance(shared.context).sendBroadcast(intent);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        };
+        shared.privateReference.addValueEventListener(shared.privateEventListener);
+
     }
 
     public static void disable() {
-        if (shared.eventListener != null) {
-            shared.reference.removeEventListener(shared.eventListener);
+        if (shared.publicEventListener != null) {
+            shared.publicReference.removeEventListener(shared.publicEventListener);
+        }
+        if (shared.privateEventListener != null) {
+            shared.privateReference.removeEventListener(shared.privateEventListener);
         }
     }
 
@@ -66,15 +94,17 @@ public class CloudDataService {
         public void didComplete(boolean success, String downloadURI, String message);
     }
 
-    public static void uploadObject(Object object) {
+    public static void uploadObject(Photo photo) {
         DatabaseReference rootReference = shared.database.getReference();
-        DatabaseReference reference = rootReference.child("photos");
-
+        DatabaseReference reference;
+        if (!photo.isPrivate) reference = rootReference.child("publicPhotos");
+        else reference = rootReference.child(photo.uploadBy);
         DatabaseReference newPostRef = reference.push();
-        newPostRef.setValue(object);
+        newPostRef.setValue(photo);
     }
 
     public static void downloadObjects() {
+
 
     }
 

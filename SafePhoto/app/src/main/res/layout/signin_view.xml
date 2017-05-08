@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textEmailAddress"
+            android:text="zl558@cornell.edu"
             android:background="#FFF"/>
 
         <TextView
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
+            android:text="L921020zx!"
             android:background="#FFF"/>
     </LinearLayout>
 

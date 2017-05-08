@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +73,8 @@ public class SigninFragment extends Fragment {
 
     private void signOut() {
         AuthenticationService.signOut();
+        BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
+        navigation.getMenu().findItem(R.id.navigation_private_photos).setEnabled(false);
         configureViewForAuthenticationState();
     }
 
@@ -117,6 +120,9 @@ public class SigninFragment extends Fragment {
     }
 
     private void showActionResult(boolean success, String message) {
+        BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
+        if (success)
+            navigation.getMenu().findItem(R.id.navigation_private_photos).setEnabled(true);
         Toast.makeText(
                 getActivity(),
                 message,

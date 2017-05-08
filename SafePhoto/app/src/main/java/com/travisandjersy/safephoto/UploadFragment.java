@@ -14,11 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.AuthenticationService;
+import com.travisandjersy.safephoto.service.CloudDataService;
+import com.travisandjersy.safephoto.service.CloudStorageService;
 
 import java.util.UUID;
 
@@ -43,6 +46,8 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     TextView des;
     boolean checked;
     boolean isPrivate;
+    Bitmap picture;
+    RadioGroup rg;
 
 
     @Nullable
@@ -55,6 +60,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         commitUploadButton = (Button) view.findViewById(R.id.commit_upload_button);
         radioPrivateButton = (Button) view.findViewById(R.id.radio_private);
         radioPublicButton = (Button) view.findViewById(R.id.radio_public);
+        rg = (RadioGroup) view.findViewById(R.id.radio_group);
         imagePreview = (ImageView) view.findViewById(R.id.pre_upload_image_preview);
         description = (EditText) view.findViewById(R.id.upload_description_field);
         des = (TextView) view.findViewById(R.id.upload_description_title);
@@ -102,6 +108,9 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+        uploadImagebutton.setEnabled(true);
+        uploadImagebutton.setText(R.string.upload_image);
+        configureForAuthenticationState();
     }
 
     private void uploadImage() {
@@ -121,11 +130,37 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "no checked", Toast.LENGTH_LONG ).show();
             return;
         }
-        Photo photo = new Photo(description.getText().toString(), isPrivate);
+        if (picture == null) {
+            Toast.makeText(getActivity(), "no picture", Toast.LENGTH_LONG ).show();
+            return;
+        }
+        final Photo photo = new Photo(description.getText().toString(), isPrivate, AuthenticationService.getUserUID());
+
         Log.e("Photo name", photo.name);
         if (photo.isPrivate) Log.e("Photo private", "private");
         else Log.e("Photo private", "public");
         Log.e("Photo description", photo.description);
+        Log.e("Photo uploadBy", photo.uploadBy);
+
+        CloudStorageService.uploadImage(picture, photo.name, new CloudStorageService.UploadResult() {
+            @Override
+            public void didComplete(boolean success, String message) {
+                if (success) {
+                    //reconfigure UI
+                    description.setText("");
+                    rg.clearCheck();
+                    uploadImagebutton.setEnabled(false);
+                    uploadImagebutton.setText(R.string.upload_success);
+                    configureForAuthenticationState();
+                    CloudDataService.uploadObject(photo);
+                    Toast.makeText(getActivity(), "nice", Toast.LENGTH_LONG ).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG ).show();
+                }
+                return;
+            }
+        });
 
     }
 
@@ -134,6 +169,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            picture = imageBitmap;
             imagePreview.setImageBitmap(imageBitmap);
             takePictureButton.setEnabled(true);
             uploadImagebutton.setEnabled(true);
@@ -153,5 +189,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         commitUploadButton.setVisibility(View.GONE);
         radioPrivateButton.setVisibility(View.GONE);
         radioPublicButton.setVisibility(View.GONE);
+
     }
 }

@@ -11,13 +11,15 @@ public class Photo extends Object {
     public String name;
     public String description;
     public boolean isPrivate;
+    public String uploadBy;
 
     public Photo() {}
 
-    public Photo(String description, boolean isPrivate) {
+    public Photo(String description, boolean isPrivate, String by) {
         this.name = UUID.randomUUID().toString();
         this.description = description;
         this.isPrivate = isPrivate;
+        this.uploadBy = by;
     }
 
 }

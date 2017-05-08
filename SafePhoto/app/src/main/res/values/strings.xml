@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SafePhoto</string>
-    <string name="title_photos">Photos</string>
+    <string name="title_public_photos">Public Photos</string>
+    <string name="title_private_photos">Private Photos</string>
     <string name="title_upload">Upload</string>
     <string name="title_search">Search</string>
     <string name="title_signin">Sign In</string>
@@ -28,4 +29,5 @@
     <string name="upload_description">Description</string>
     <string name="radio_private">Private</string>
     <string name="radio_public">Public</string>
+    <string name="upload_success">Successfully Uploaded</string>
 </resources>

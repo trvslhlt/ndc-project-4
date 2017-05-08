@@ -17,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.travisandjersy.safephoto.R;
 import com.travisandjersy.safephoto.model.Photo;
 import com.travisandjersy.safephoto.service.CloudDataService;
 import com.travisandjersy.safephoto.service.LocalStorageService;
@@ -28,7 +29,7 @@ import java.util.List;
  * Created by trvslhlt on 4/29/17.
  */
 
-public class PhotosFragment extends ListFragment implements OnItemClickListener {
+public class PrivatePhotosFragment extends ListFragment implements OnItemClickListener {
 
     private static final String TAG = "PhotosFragment";
     ArrayAdapter<String> adapter;
@@ -43,8 +44,8 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        photos = PhotoService.getPhotos();
-        List<String> photoNames = PhotoService.getPhotoNames();
+        photos = PhotoService.getPrivatePhotos();
+        List<String> photoNames = PhotoService.getPrivatePhotoNames();
         adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, photoNames);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
@@ -63,8 +64,8 @@ public class PhotosFragment extends ListFragment implements OnItemClickListener 
     }
 
     public void update() {
-        photos = PhotoService.getPhotos();
-        List<String> photoNames = PhotoService.getPhotoNames();
+        photos = PhotoService.getPrivatePhotos();
+        List<String> photoNames = PhotoService.getPrivatePhotoNames();
         adapter.clear();
         adapter.addAll(photoNames);
         adapter.notifyDataSetChanged();

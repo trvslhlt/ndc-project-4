@@ -31,6 +31,13 @@ public class AuthenticationService extends Object {
         return (FirebaseAuth.getInstance().getCurrentUser() != null);
     }
 
+    public static String getUserUID() {
+        if (isSignedIn())
+            return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        else
+            return "a";
+    }
+
     public static void enable(Context context) {
         shared.context = context;
         shared.mAuth = FirebaseAuth.getInstance();
