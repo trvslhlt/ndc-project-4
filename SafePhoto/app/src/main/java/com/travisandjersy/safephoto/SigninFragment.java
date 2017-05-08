@@ -80,6 +80,12 @@ public class SigninFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        configureViewForAuthenticationState();
+    }
+
     private void enableUserActions(boolean enable) {
         signInOrOutButton.setEnabled(enable);
         signupButton.setEnabled(enable);

@@ -69,7 +69,7 @@ public class GoogleSignInActivity extends BaseActivity implements
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("1:247742135840:android:e624b86de4f32764")
+                .requestIdToken("247742135840-705q9ged2bc21dh9p1cjfbbnchvh1i1a.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         // [END config_signin]
@@ -102,16 +102,20 @@ public class GoogleSignInActivity extends BaseActivity implements
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
-            } else {
-                // Google Sign In failed, update UI appropriately
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
-            }
+            handleSignInResult(result);
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
+            // Google Sign In was successful, authenticate with Firebase
+            GoogleSignInAccount account = result.getSignInAccount();
+            firebaseAuthWithGoogle(account);
+        } else {
+            // Google Sign In failed, update UI appropriately
+            // [START_EXCLUDE]
+            updateUI(null);
+            // [END_EXCLUDE]
         }
     }
     // [END onactivityresult]
@@ -144,6 +148,7 @@ public class GoogleSignInActivity extends BaseActivity implements
                         // [START_EXCLUDE]
                         hideProgressDialog();
                         // [END_EXCLUDE]
+                        finish();
                     }
                 });
     }
