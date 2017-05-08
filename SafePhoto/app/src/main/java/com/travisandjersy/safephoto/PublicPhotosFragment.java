@@ -53,7 +53,7 @@ public class PublicPhotosFragment extends ListFragment implements OnItemClickLis
     @Override
     public void onStart() {
         super.onStart();
-        //CloudDataService.enable(getContext());
+        CloudDataService.enable(getContext());
     }
 
     @Override

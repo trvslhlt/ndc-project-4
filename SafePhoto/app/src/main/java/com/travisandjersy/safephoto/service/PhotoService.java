@@ -73,9 +73,7 @@ public class PhotoService {
     public static void setPublicPhotos(List<Photo> photos) {
         shared.publicPhotos = photos;
     }
-    public static void setPrivatePhotos(List<Photo> photos) {
-        shared.privatePhotos = photos;
-    }
+    public static void setPrivatePhotos(List<Photo> photos) { shared.privatePhotos = photos; }
 
 
 

@@ -30,4 +30,9 @@
     <string name="radio_private">Private</string>
     <string name="radio_public">Public</string>
     <string name="upload_success">Successfully Uploaded</string>
+
+    <string name="search_label">Safephoto</string>
+    <string name="search_hint">Search for photos</string>
+    <string name="settings_description">hahaha</string>
+
 </resources>

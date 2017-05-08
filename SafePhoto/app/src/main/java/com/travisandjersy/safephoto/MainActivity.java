@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         AuthenticationService.enable(getApplicationContext());
         CloudDataService.enable(getApplicationContext());
-        //transitionToFragment(new PublicPhotosFragment());
+        transitionToFragment(new PublicPhotosFragment());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
                 new IntentFilter(getString(R.string.intent_photos_updated)));
 
-        transitionToFragment(new PublicPhotosFragment());
+        //transitionToFragment(new PublicPhotosFragment());
 
         //AuthenticationService.enable(getApplicationContext());
         //CloudDataService.enable(getApplicationContext());
