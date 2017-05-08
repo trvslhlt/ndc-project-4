@@ -156,4 +156,11 @@ public class SigninFragment extends Fragment {
             signupButton.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == getActivity().RESULT_OK) {
+            configureViewForAuthenticationState();
+        }
+    }
 }

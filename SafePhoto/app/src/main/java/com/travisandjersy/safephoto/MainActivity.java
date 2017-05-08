@@ -116,4 +116,5 @@ public class MainActivity extends AppCompatActivity {
         transaction.add(R.id.content, newFragment).commit();
         currentFragment = newFragment;
     }
+
 }

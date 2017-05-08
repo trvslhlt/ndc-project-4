@@ -27,6 +27,7 @@ public class AuthenticationService extends Object {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+
     public static boolean isSignedIn() {
         return (FirebaseAuth.getInstance().getCurrentUser() != null);
     }
@@ -89,6 +90,8 @@ public class AuthenticationService extends Object {
                 }
             });
     }
+
+
 
     public static void signOut() {
         shared.mAuth.signOut();

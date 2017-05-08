@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.ArrayList;
 
+import android.util.Log;
 
 /**
  * Created by trvslhlt on 4/29/17.
@@ -80,7 +81,7 @@ public class SearchFragment extends Fragment implements OnItemClickListener {
             nameList.addAll(privateNameList);
         photos = new ArrayList<Photo>(publicPhotos);
         photos.addAll(privatePhotos);
-        adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, nameList);
+        adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, new ArrayList<String>(nameList));
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
         return view;
@@ -104,21 +105,8 @@ public class SearchFragment extends Fragment implements OnItemClickListener {
         //CloudDataService.disable();
     }
 
-/*
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        this.update(newText);
-        return true;
-    }
-*/
 
     public void update(String text) {
-        //photos = PhotoService.getPublicPhotos();
         List<String> updateList = new ArrayList<String>();
         text = text.toLowerCase();
         if (text.length() == 0) {
@@ -133,6 +121,7 @@ public class SearchFragment extends Fragment implements OnItemClickListener {
         adapter.clear();
         adapter.addAll(updateList);
         adapter.notifyDataSetChanged();
+        Log.d("Debug", nameList.toString());
     }
 
     @Override

@@ -36,6 +36,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 /**
  * Demonstrate Firebase Authentication using a Google ID Token.
  */
+
 public class GoogleSignInActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -68,7 +69,7 @@ public class GoogleSignInActivity extends BaseActivity implements
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("1:247742135840:android:e624b86de4f32764")
                 .requestEmail()
                 .build();
         // [END config_signin]
