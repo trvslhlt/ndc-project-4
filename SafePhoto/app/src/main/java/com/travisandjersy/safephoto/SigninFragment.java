@@ -93,8 +93,6 @@ public class SigninFragment extends Fragment {
 
     private void signOut() {
         AuthenticationService.signOut();
-        BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
-        navigation.getMenu().findItem(R.id.navigation_private_photos).setEnabled(false);
         configureViewForAuthenticationState();
     }
 
@@ -141,8 +139,6 @@ public class SigninFragment extends Fragment {
 
     private void showActionResult(boolean success, String message) {
         BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
-        if (success)
-            navigation.getMenu().findItem(R.id.navigation_private_photos).setEnabled(true);
         Toast.makeText(
                 getActivity(),
                 message,
@@ -152,14 +148,19 @@ public class SigninFragment extends Fragment {
 
     private void configureViewForAuthenticationState() {
         LinearLayout inputContainer = (LinearLayout) view.findViewById(R.id.sign_in_input_container);
+        BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         if (AuthenticationService.isSignedIn()) {
             signInOrOutButton.setText(R.string.authentication_signout);
             inputContainer.setVisibility(View.GONE);
             signupButton.setVisibility(View.GONE);
+            googleSignIn.setVisibility(View.GONE);
+            navigation.getMenu().findItem(R.id.navigation_private_photos).setEnabled(true);
         } else {
             signInOrOutButton.setText(R.string.authentication_signin);
             inputContainer.setVisibility(View.VISIBLE);
             signupButton.setVisibility(View.VISIBLE);
+            googleSignIn.setVisibility(View.VISIBLE);
+            navigation.getMenu().findItem(R.id.navigation_private_photos).setEnabled(false);
         }
     }
 
